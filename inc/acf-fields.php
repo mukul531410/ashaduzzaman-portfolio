@@ -1,6 +1,6 @@
 <?php
 /**
- * ACF field group registration for Projects.
+ * ACF field group registration.
  *
  * @package AshaduzzamanPortfolio
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register ACF local field group for project post type.
+ * Register ACF local field groups for Projects, Home Page, and Testimonials.
  *
  * @return void
  */
@@ -701,6 +701,91 @@ function ashp_register_project_acf_fields() {
 			'hide_on_screen' => '',
 			'active' => true,
 			'description' => 'Fields used by the React frontend for project data.',
+		)
+	);
+
+	acf_add_local_field_group(
+		array(
+			'key' => 'group_ashp_testimonials',
+			'title' => 'Testimonial Fields',
+			'fields' => array(
+				array(
+					'key' => 'field_ashp_testimonial_company',
+					'label' => 'Company Name',
+					'name' => 'company_name',
+					'type' => 'text',
+					'instructions' => 'The company name for this testimonial.',
+					'required' => 0,
+					'conditional_logic' => 0,
+					'wrapper' => array(
+						'width' => '50',
+						'class' => '',
+						'id' => '',
+					),
+					'default_value' => '',
+					'placeholder' => '',
+					'prepend' => '',
+					'append' => '',
+					'maxlength' => '',
+				),
+				array(
+					'key' => 'field_ashp_testimonial_designation',
+					'label' => 'Designation',
+					'name' => 'designation',
+					'type' => 'text',
+					'instructions' => 'The designation or role of the person.',
+					'required' => 0,
+					'conditional_logic' => 0,
+					'wrapper' => array(
+						'width' => '50',
+						'class' => '',
+						'id' => '',
+					),
+					'default_value' => '',
+					'placeholder' => '',
+					'prepend' => '',
+					'append' => '',
+					'maxlength' => '',
+				),
+				array(
+					'key' => 'field_ashp_testimonial_rating',
+					'label' => 'Rating',
+					'name' => 'rating',
+					'type' => 'number',
+					'instructions' => 'Rating from 1 to 5 for this testimonial.',
+					'required' => 0,
+					'conditional_logic' => 0,
+					'wrapper' => array(
+						'width' => '50',
+						'class' => '',
+						'id' => '',
+					),
+					'default_value' => '',
+					'placeholder' => '',
+					'prepend' => '',
+					'append' => '',
+					'min' => 1,
+					'max' => 5,
+					'step' => 1,
+				),
+			),
+			'location' => array(
+				array(
+					array(
+						'param' => 'post_type',
+						'operator' => '==',
+						'value' => 'testimonial',
+					),
+				),
+			),
+			'menu_order' => 0,
+			'position' => 'normal',
+			'style' => 'default',
+			'label_placement' => 'top',
+			'instruction_placement' => 'label',
+			'hide_on_screen' => '',
+			'active' => true,
+			'description' => 'Fields for testimonials used by the frontend.',
 		)
 	);
 }
