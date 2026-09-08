@@ -1,0 +1,19 @@
+/*
+Theme Name: Ashaduzzaman Portfolio
+Theme URI: https://wpserviceshub.com/
+Author: Md Ashaduzzaman
+Author URI: https://wpserviceshub.com/
+Description: A production-ready headless WordPress theme for a portfolio and project CMS.
+Version: 1.0.0
+Text Domain: ashaduzzaman-portfolio
+Requires at least: 6.0
+Tested up to: 6.5
+Requires PHP: 8.1
+*/
+
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	background: #f8fafc;
+	color: #0f172a;
+}
