@@ -58,6 +58,7 @@ function ashp_register_global_settings_section( $wp_customize ) {
         )
     );
     $wp_customize->add_control(
+        'ashp_phone',
         array(
             'label'      => __( 'Phone Number', 'ashaduzzaman-portfolio' ),
             'section'    => 'ashp_global_website_settings',
@@ -77,6 +78,7 @@ function ashp_register_global_settings_section( $wp_customize ) {
         )
     );
     $wp_customize->add_control(
+        'ashp_email',
         array(
             'label'      => __( 'Email Address', 'ashaduzzaman-portfolio' ),
             'section'    => 'ashp_global_website_settings',
@@ -96,6 +98,7 @@ function ashp_register_global_settings_section( $wp_customize ) {
         )
     );
     $wp_customize->add_control(
+        'ashp_address',
         array(
             'label'      => __( 'Address', 'ashaduzzaman-portfolio' ),
             'section'    => 'ashp_global_website_settings',
@@ -127,6 +130,7 @@ function ashp_register_global_settings_section( $wp_customize ) {
             )
         );
         $wp_customize->add_control(
+            $setting_name,
             array(
                 'label'      => $label,
                 'section'    => 'ashp_global_website_settings',
@@ -148,6 +152,7 @@ function ashp_register_global_settings_section( $wp_customize ) {
         )
     );
     $wp_customize->add_control(
+        'ashp_footer_copyright',
         array(
             'label'      => __( 'Footer Copyright Text', 'ashaduzzaman-portfolio' ),
             'section'    => 'ashp_global_website_settings',
