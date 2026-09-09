@@ -30,6 +30,7 @@ require_once ASHP_THEME_PATH . 'inc/post-types.php';
 require_once ASHP_THEME_PATH . 'inc/api.php';
 require_once ASHP_THEME_PATH . 'inc/security.php';
 require_once ASHP_THEME_PATH . 'inc/acf-fields.php';
+require_once ASHP_THEME_PATH . 'inc/customizer.php';
 
 /**
  * Initialize the theme.

@@ -703,6 +703,17 @@ function ashp_register_project_acf_fields() {
 			'description' => 'Fields used by the React frontend for project data.',
 		)
 	);
+}
+
+/**
+ * Register ACF field group for Testimonials.
+ *
+ * @return void
+ */
+function ashp_register_testimonials_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
 
 	acf_add_local_field_group(
 		array(
@@ -791,3 +802,4 @@ function ashp_register_project_acf_fields() {
 }
 
 add_action( 'acf/init', 'ashp_register_project_acf_fields' );
+add_action( 'acf/init', 'ashp_register_testimonials_acf_fields' );
