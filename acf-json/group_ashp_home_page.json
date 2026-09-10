@@ -679,7 +679,7 @@
             "prepend": "",
             "append": ""
         },
-{
+        {
             "key": "field_ashp_technical_skills_content",
             "label": "Content",
             "name": "technical_skills_content",
@@ -703,215 +703,186 @@
             "key": "field_ashp_home_tab_projects",
             "label": "Projects",
             "name": "",
-            "aria-label": "",
             "type": "tab",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
             "placement": "top",
-            "endpoint": 0,
-            "selected": 0
+            "endpoint": 0
         },
         {
             "key": "field_ashp_projects_section_title",
             "label": "Section Title",
             "name": "projects_section_title",
-            "aria-label": "",
             "type": "text",
             "instructions": "Section title for the Projects area.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "Featured Projects",
-            "placeholder": "Featured Projects",
-            "maxlength": "",
-            "prepend": "",
-            "append": ""
+            "placeholder": "Featured Projects"
         },
         {
             "key": "field_ashp_projects_content",
             "label": "Content",
             "name": "projects_content",
-            "aria-label": "",
             "type": "wysiwyg",
             "instructions": "Description or introduction for the Projects section.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "",
             "tabs": "all",
             "toolbar": "basic",
-            "media_upload": 0,
-            "delay": 0
+            "media_upload": 0
         },
         {
             "key": "field_ashp_projects_archive_button_text",
             "label": "Archive Button Text",
             "name": "projects_archive_button_text",
-            "aria-label": "",
             "type": "text",
             "instructions": "Text for the button linking to the Projects archive.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "All Projects",
-            "placeholder": "All Projects",
-            "maxlength": "",
-            "prepend": "",
-            "append": ""
+            "placeholder": "All Projects"
         },
         {
             "key": "field_ashp_home_tab_testimonials",
             "label": "Testimonials",
             "name": "",
-            "aria-label": "",
             "type": "tab",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
             "placement": "top",
-            "endpoint": 0,
-            "selected": 0
+            "endpoint": 0
         },
         {
             "key": "field_ashp_testimonials_section_title",
             "label": "Section Title",
             "name": "testimonials_section_title",
-            "aria-label": "",
             "type": "text",
             "instructions": "Section title for the Testimonials area.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "Client Testimonials",
-            "placeholder": "Client Testimonials",
-            "maxlength": "",
-            "prepend": "",
-            "append": ""
+            "placeholder": "Client Testimonials"
         },
         {
             "key": "field_ashp_testimonials_content",
             "label": "Content",
             "name": "testimonials_content",
-            "aria-label": "",
             "type": "wysiwyg",
             "instructions": "Description or introduction for the Testimonials section.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "",
             "tabs": "all",
             "toolbar": "basic",
-            "media_upload": 0,
-            "delay": 0
+            "media_upload": 0
         },
         {
             "key": "field_ashp_home_tab_articles",
             "label": "Articles",
             "name": "",
-            "aria-label": "",
             "type": "tab",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": false,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
             "placement": "top",
-            "endpoint": 0,
-            "selected": 0
+            "endpoint": 0
         },
         {
             "key": "field_ashp_articles_section_title",
             "label": "Section Title",
             "name": "articles_section_title",
-            "aria-label": "",
             "type": "text",
             "instructions": "Section title for the Articles area.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "Latest Articles",
-            "placeholder": "Latest Articles",
-            "maxlength": "",
-            "prepend": "",
-            "append": ""
+            "placeholder": "Latest Articles"
         },
         {
             "key": "field_ashp_articles_content",
             "label": "Content",
             "name": "articles_content",
-            "aria-label": "",
             "type": "wysiwyg",
             "instructions": "Description or introduction for the Articles section.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "",
             "tabs": "all",
             "toolbar": "basic",
-            "media_upload": 0,
-            "delay": 0
+            "media_upload": 0
         },
         {
             "key": "field_ashp_articles_archive_button_text",
             "label": "Archive Button Text",
             "name": "articles_archive_button_text",
-            "aria-label": "",
             "type": "text",
             "instructions": "Text for the button linking to the Articles archive.",
             "required": 0,
             "conditional_logic": 0,
-            "wrapper": {
-                "width": "100",
-                "class": "",
-                "id": ""
-            },
+            "wrapper": { "width": "100", "class": "", "id": "" },
             "default_value": "View All Articles",
-            "placeholder": "View All Articles",
-            "maxlength": "",
-            "prepend": "",
-            "append": ""
+            "placeholder": "View All Articles"
+        },
+        {
+            "key": "field_ashp_home_tab_contact",
+            "label": "Contact",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ashp_contact_section_title",
+            "label": "Section Title",
+            "name": "contact_section_title",
+            "type": "text",
+            "instructions": "Main title for the Contact section.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": { "width": "100", "class": "", "id": "" },
+            "default_value": "Get In Touch",
+            "placeholder": "Get In Touch"
+        },
+        {
+            "key": "field_ashp_contact_section_description",
+            "label": "Section Description",
+            "name": "contact_section_description",
+            "type": "textarea",
+            "instructions": "Description displayed below the Contact section title.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": { "width": "100", "class": "", "id": "" },
+            "default_value": "Ready to start your next project? Let's discuss how I can help bring your vision to life",
+            "rows": 3,
+            "new_lines": "br"
+        },
+        {
+            "key": "field_ashp_contact_info_title",
+            "label": "Contact Info Title",
+            "name": "contact_info_title",
+            "type": "text",
+            "instructions": "Title for the contact information area.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": { "width": "100", "class": "", "id": "" },
+            "default_value": "Let's Start a Conversation",
+            "placeholder": "Let's Start a Conversation"
+        },
+        {
+            "key": "field_ashp_contact_info_description",
+            "label": "Contact Info Description",
+            "name": "contact_info_description",
+            "type": "wysiwyg",
+            "instructions": "Description for the contact information area.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": { "width": "100", "class": "", "id": "" },
+            "default_value": "<p>I'm always interested in hearing about new projects and opportunities. Whether you have a specific project in mind or just want to explore possibilities, feel free to reach out. I'd love to hear from you!</p><p>With 10+ years of experience in WordPress development and a track record of successful international collaborations, I'm confident we can create something amazing together.</p>",
+            "tabs": "all",
+            "toolbar": "basic",
+            "media_upload": 0
         }
     ],
     "location": [
@@ -928,12 +899,14 @@
     "style": "default",
     "label_placement": "top",
     "instruction_placement": "label",
-    "hide_on_screen": "",
+    "hide_on_screen": [
+        "the_content"
+    ],
     "active": true,
     "description": "Home page fields for the front page.",
     "show_in_rest": 0,
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1788962803
+    "modified": 1789050331
 }
