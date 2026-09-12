@@ -29,6 +29,7 @@ require_once ASHP_THEME_PATH . 'inc/enqueue.php';
 require_once ASHP_THEME_PATH . 'inc/post-types.php';
 require_once ASHP_THEME_PATH . 'inc/api.php';
 require_once ASHP_THEME_PATH . 'inc/security.php';
+require_once ASHP_THEME_PATH . 'inc/contact-messages.php';
 require_once ASHP_THEME_PATH . 'inc/acf-fields.php';
 require_once ASHP_THEME_PATH . 'inc/customizer.php';
 
@@ -44,6 +45,7 @@ function ashp_initialize_theme() {
 	ashp_register_headless_theme_support();
 	ashp_register_rest_api_support();
 	ashp_register_security_hooks();
+	ashp_initialize_contact_message_admin();
 }
 
 add_action( 'after_setup_theme', 'ashp_initialize_theme' );

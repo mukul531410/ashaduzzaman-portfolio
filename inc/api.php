@@ -94,7 +94,7 @@ function ashp_get_home_page_settings() {
 }
 
 /**
- * Validate, sanitize, and deliver a contact form submission.
+ * Validate, sanitize, save, and deliver a contact form submission.
  *
  * @param WP_REST_Request $request REST request.
  * @return WP_REST_Response|WP_Error
@@ -120,18 +120,124 @@ function ashp_handle_contact_submission( WP_REST_Request $request ) {
 		return new WP_Error( 'ashp_invalid_message', 'Please provide a message under 5000 characters.', array( 'status' => 400 ) );
 	}
 
+	if ( ! ashp_check_contact_rate_limit() ) {
+		return new WP_Error( 'ashp_rate_limited', 'Too many submissions. Please try again later.', array( 'status' => 429 ) );
+	}
+
 	$recipient = sanitize_email( (string) get_theme_mod( 'ashp_email' ) );
 	if ( '' === $recipient || ! is_email( $recipient ) ) {
 		return new WP_Error( 'ashp_missing_recipient', 'Contact email is not configured.', array( 'status' => 503 ) );
+	}
+
+	$contact_id = ashp_save_contact_message( $name, $email, $message );
+
+	if ( ! $contact_id ) {
+		return new WP_Error( 'ashp_save_failed', 'Unable to save your message right now.', array( 'status' => 500 ) );
 	}
 
 	$subject = 'New Contact Form Message';
 	$body    = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}";
 	$headers = array( 'Reply-To: ' . $email );
 
-	if ( ! wp_mail( $recipient, $subject, $body, $headers ) ) {
-		return new WP_Error( 'ashp_mail_failed', 'Unable to send your message right now.', array( 'status' => 500 ) );
+	$mail_sent = wp_mail( $recipient, $subject, $body, $headers );
+
+	if ( ! $mail_sent ) {
+		return new WP_REST_Response(
+			array(
+				'success'      => true,
+				'message'      => 'Your message has been received, but the email notification failed to send. We will still review your message.',
+				'contact_id'   => $contact_id,
+				'mail_warning' => true,
+			),
+			200
+		);
 	}
 
-	return new WP_REST_Response( array( 'success' => true ), 200 );
+	return new WP_REST_Response(
+		array(
+			'success'    => true,
+			'message'    => 'Your message has been sent successfully.',
+			'contact_id' => $contact_id,
+		),
+		200
+	);
 }
+
+/**
+ * Save a contact submission to the database.
+ *
+ * @param string $name    Visitor name.
+ * @param string $email   Visitor email.
+ * @param string $message Visitor message.
+ * @return int|false Post ID on success, false on failure.
+ */
+function ashp_save_contact_message( $name, $email, $message ) {
+	$post_data = array(
+		'post_title'  => $name,
+		'post_content'=> $message,
+		'post_status' => 'private',
+		'post_type'   => 'contact_message',
+	);
+
+	$post_id = wp_insert_post( $post_data, true );
+
+	if ( is_wp_error( $post_id ) ) {
+		return false;
+	}
+
+	update_post_meta( $post_id, '_ashp_contact_email', sanitize_email( $email ) );
+	update_post_meta( $post_id, '_ashp_contact_status', 'new' );
+
+	return $post_id;
+}
+
+/**
+ * Check whether the current client has exceeded the contact submission rate limit.
+ *
+ * Uses client IP address in a transient. Does not store IP permanently.
+ *
+ * @return bool True if the client is allowed to submit, false if rate limited.
+ */
+function ashp_check_contact_rate_limit() {
+	$ip = ashp_get_client_ip();
+
+	if ( ! $ip ) {
+		return false;
+	}
+
+	$transient_key = 'ashp_contact_rate_limit_' . md5( $ip );
+	$limit         = 3;
+	$window        = 300; // 5 minutes in seconds.
+
+	$attempts = (int) get_transient( $transient_key );
+
+	if ( $attempts >= $limit ) {
+		return false;
+	}
+
+	set_transient( $transient_key, $attempts + 1, $window );
+
+	return true;
+}
+
+/**
+ * Get the client IP address from server headers.
+ *
+ * @return string|null IP address or null if unavailable.
+ */
+function ashp_get_client_ip() {
+	$headers = array( 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP', 'REMOTE_ADDR' );
+
+	foreach ( $headers as $header ) {
+		if ( ! empty( $_SERVER[ $header ] ) ) {
+			$ip = sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ); // phpcs:ignore WordPressVIPMinimum.Variables.ServerVariables.UserControlledHeaders
+
+			if ( filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+				return $ip;
+			}
+		}
+	}
+
+	return null;
+}
+

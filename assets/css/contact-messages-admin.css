@@ -1,0 +1,63 @@
+/* Contact Messages Admin Styles */
+
+.column-email {
+	width: 20%;
+}
+
+.column-status {
+	width: 10%;
+}
+
+.column-date {
+	width: 15%;
+}
+
+#post-body-content {
+	margin-bottom: 20px;
+}
+
+#message {
+	white-space: pre-wrap;
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	padding: 20px;
+	border-radius: 4px;
+	font-family: monospace;
+	font-size: 14px;
+	line-height: 1.6;
+}
+
+#side-sortables .inside {
+	margin-bottom: 20px;
+}
+
+#side-sortables .inside h2 {
+	margin-top: 0;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.contact-meta-box p {
+	margin: 8px 0;
+}
+
+.contact-meta-box strong {
+	display: inline-block;
+	width: 80px;
+}
+
+.reply-by-email {
+	display: inline-block;
+	margin-top: 10px;
+	padding: 8px 16px;
+	background: #2271b1;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+.reply-by-email:hover {
+	background: #135e96;
+	color: #fff;
+}
