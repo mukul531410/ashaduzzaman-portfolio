@@ -43,6 +43,16 @@ function ashp_register_custom_rest_routes() {
 			'permission_callback' => 'ashp_allow_public_home_settings',
 		)
 	);
+
+	register_rest_route(
+		'ashp/v1',
+		'/global',
+		array(
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => 'ashp_get_global_settings',
+			'permission_callback' => 'ashp_allow_public_global_settings',
+		)
+	);
 }
 
 /**
@@ -61,6 +71,47 @@ function ashp_allow_public_contact_submission() {
  */
 function ashp_allow_public_home_settings() {
 	return true;
+}
+
+/**
+ * Allow public reads of non-sensitive global Customizer settings.
+ *
+ * @return bool
+ */
+function ashp_allow_public_global_settings() {
+	return true;
+}
+
+/**
+ * Return public global website settings from the Customizer.
+ *
+ * @return WP_REST_Response
+ */
+function ashp_get_global_settings() {
+	$email   = sanitize_email( (string) get_theme_mod( 'ashp_email', '' ) );
+	$phone   = sanitize_text_field( (string) get_theme_mod( 'ashp_phone', '' ) );
+	$address = wp_kses_post( (string) get_theme_mod( 'ashp_address', '' ) );
+
+	$social_keys = array( 'facebook', 'twitter', 'instagram', 'linkedin', 'github' );
+	$social      = array();
+
+	foreach ( $social_keys as $key ) {
+		$raw = get_theme_mod( 'ashp_' . $key, '' );
+		$url = esc_url_raw( (string) $raw );
+
+		if ( '' !== $url ) {
+			$social[ $key ] = $url;
+		}
+	}
+
+	$data = array(
+		'email'   => $email,
+		'phone'   => $phone,
+		'address' => $address,
+		'social'  => $social,
+	);
+
+	return rest_ensure_response( $data );
 }
 
 /**
