@@ -201,16 +201,89 @@ function ashp_contact_message_row_actions( $actions, $post ) {
 }
 
 /**
- * Initialize Contact Message admin hooks.
+ * Add status field to Contact Message Quick Edit form.
+ *
+ * @param string $column_name Column name.
+ * @param string $post_type   Post type slug.
+ * @return void
+ */
+function ashp_contact_message_quick_edit( $column_name, $post_type ) {
+	if ( 'contact_message' !== $post_type || 'status' !== $column_name ) {
+		return;
+	}
+
+	$current = isset( $_GET['ashp_contact_status'] ) ? sanitize_text_field( wp_unslash( $_GET['ashp_contact_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	?>
+	<fieldset class="implicit-fieldset">
+		<div class="inline-edit-group">
+			<label class="alignleft">
+				<span class="title"><?php esc_html_e( 'Status', 'ashaduzzaman-portfolio' ); ?></span>
+				<select id="ashp-quick-edit-status" name="ashp_contact_status">
+					<?php foreach ( array( 'new', 'read', 'replied', 'archived', 'spam' ) as $status ) : ?>
+						<option value="<?php echo esc_attr( $status ); ?>">
+							<?php echo esc_html( ucfirst( $status ) ); ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+			</label>
+		</div>
+	</fieldset>
+	<?php
+}
+
+/**
+ * Populate Quick Edit status dropdown with current value when opening Quick Edit.
+ *
+ * @param string $column_name Column name.
+ * @param string $post_type   Post type slug.
+ * @return void
+ */
+function ashp_contact_message_quick_edit_js( $column_name, $post_type ) {
+	if ( 'contact_message' !== $post_type || 'status' !== $column_name ) {
+		return;
+	}
+	?>
+	<script type="text/javascript">
+	(function($) {
+		$(document).on('click', '.editinline', function() {
+			var status = $(this).closest('tr').find('td.column-status').text().trim().toLowerCase();
+			$('#ashp-quick-edit-status').val(status || 'new');
+		});
+	})(jQuery);
+	</script>
+	<?php
+}
+
+/**
+ * Save Contact Message status from Quick Edit or regular edit screen.
+ *
+ * @param int $post_id Post ID.
+ * @return void
+ */
+function ashp_save_contact_message_status( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	if ( ! isset( $_POST['ashp_contact_status'] ) ) {
+		return;
+	}
+
+	$status = sanitize_text_field( wp_unslash( $_POST['ashp_contact_status'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$allowed = array( 'new', 'read', 'replied', 'archived', 'spam' );
+
+	if ( in_array( $status, $allowed, true ) ) {
+		update_post_meta( $post_id, '_ashp_contact_status', $status );
+	}
+}
+
+/**
+ * Initialize Contact Message status editing admin hooks.
  *
  * @return void
  */
-function ashp_initialize_contact_message_admin() {
-	add_action( 'init', 'ashp_register_contact_message_post_type' );
-	add_filter( 'manage_contact_message_posts_columns', 'ashp_contact_message_list_columns' );
-	add_action( 'manage_contact_message_posts_custom_column', 'ashp_contact_message_list_column_content', 10, 2 );
-	add_filter( 'manage_edit-contact_message_sortable_columns', 'ashp_contact_message_sortable_columns' );
-	add_action( 'restrict_manage_posts', 'ashp_contact_message_status_filter' );
-	add_action( 'pre_get_posts', 'ashp_contact_message_status_filter_query' );
-	add_filter( 'post_row_actions', 'ashp_contact_message_row_actions', 10, 2 );
+function ashp_initialize_contact_message_status_admin() {
+	add_action( 'quick_edit_custom_box', 'ashp_contact_message_quick_edit', 10, 2 );
+	add_action( 'admin_footer', 'ashp_contact_message_quick_edit_js', 10, 2 );
+	add_action( 'save_post_contact_message', 'ashp_save_contact_message_status' );
 }

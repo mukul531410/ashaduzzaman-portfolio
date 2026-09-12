@@ -46,6 +46,7 @@ function ashp_initialize_theme() {
 	ashp_register_rest_api_support();
 	ashp_register_security_hooks();
 	ashp_initialize_contact_message_admin();
+	ashp_initialize_contact_message_status_admin();
 }
 
 add_action( 'after_setup_theme', 'ashp_initialize_theme' );
