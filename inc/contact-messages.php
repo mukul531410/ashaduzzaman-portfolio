@@ -348,7 +348,34 @@ function ashp_hide_contact_message_add_new_button() {
 }
 
 /**
- * Add an informational Contact Message meta box alongside the native editor.
+ * Hide native editing/publishing controls on the Contact Message detail screen.
+ *
+ * @return void
+ */
+function ashp_hide_contact_message_detail_controls() {
+	$screen = get_current_screen();
+
+	if ( ! $screen || 'contact_message' !== $screen->id ) {
+		return;
+	}
+	?>
+	<style>
+		#submitdiv,
+		#submitpost,
+		.submitdelete,
+		.misc-pub-visibility,
+		.misc-pub-curtime,
+		#minor-publishing-actions,
+		#major-publishing-actions,
+		.button-link.delete {
+			display: none !important;
+		}
+	</style>
+	<?php
+}
+
+/**
+ * Render the Contact Message detail screen as read-only.
  *
  * @param WP_Post $post Post object.
  * @return void
@@ -358,12 +385,18 @@ function ashp_contact_message_readonly_detail_screen( $post ) {
 		return;
 	}
 
+	remove_post_type_support( 'contact_message', 'editor' );
+	remove_post_type_support( 'contact_message', 'title' );
+	remove_meta_box( 'submitdiv', 'contact_message', 'side' );
+	remove_meta_box( 'authordiv', 'contact_message', 'side' );
+	remove_meta_box( 'slugdiv', 'contact_message', 'side' );
+
 	add_meta_box(
 		'ashp_contact_message_detail',
 		'Lead Details',
 		'ashp_contact_message_detail_meta_box',
 		'contact_message',
-		'side',
+		'normal',
 		'default'
 	);
 }
@@ -417,6 +450,7 @@ function ashp_initialize_contact_message_status_admin() {
 	add_action( 'admin_menu', 'ashp_remove_contact_message_admin_menus' );
 	add_action( 'load-post-new.php', 'ashp_prevent_contact_message_creation' );
 	add_action( 'admin_head-edit.php', 'ashp_hide_contact_message_add_new_button' );
+	add_action( 'admin_head-post.php', 'ashp_hide_contact_message_detail_controls' );
 	add_filter( 'post_row_actions', 'ashp_contact_message_row_actions', 10, 2 );
 	add_filter( 'manage_contact_message_posts_columns', 'ashp_contact_message_list_columns' );
 	add_action( 'manage_contact_message_posts_custom_column', 'ashp_contact_message_list_column_content', 10, 2 );
