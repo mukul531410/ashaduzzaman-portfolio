@@ -234,12 +234,11 @@ function ashp_contact_message_quick_edit( $column_name, $post_type ) {
 /**
  * Populate Quick Edit status dropdown with current value when opening Quick Edit.
  *
- * @param string $column_name Column name.
- * @param string $post_type   Post type slug.
  * @return void
  */
-function ashp_contact_message_quick_edit_js( $column_name, $post_type ) {
-	if ( 'contact_message' !== $post_type || 'status' !== $column_name ) {
+function ashp_contact_message_quick_edit_js() {
+	$screen = get_current_screen();
+	if ( ! $screen || 'edit-contact_message' !== $screen->id ) {
 		return;
 	}
 	?>
@@ -284,6 +283,6 @@ function ashp_save_contact_message_status( $post_id ) {
  */
 function ashp_initialize_contact_message_status_admin() {
 	add_action( 'quick_edit_custom_box', 'ashp_contact_message_quick_edit', 10, 2 );
-	add_action( 'admin_footer', 'ashp_contact_message_quick_edit_js', 10, 2 );
+	add_action( 'admin_footer', 'ashp_contact_message_quick_edit_js' );
 	add_action( 'save_post_contact_message', 'ashp_save_contact_message_status' );
 }
