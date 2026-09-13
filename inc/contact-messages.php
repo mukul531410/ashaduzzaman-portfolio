@@ -364,8 +364,8 @@ function ashp_hide_contact_message_add_new_button() {
  * @param WP_Post  $post     Post object.
  * @return void
  */
-function ashp_contact_message_readonly_detail_screen( $post_type, $post ) {
-	if ( 'contact_message' !== $post_type || ! $post || 'contact_message' !== $post->post_type ) {
+function ashp_contact_message_readonly_detail_screen( $post ) {
+	if ( ! $post || 'contact_message' !== $post->post_type ) {
 		return;
 	}
 
@@ -438,7 +438,7 @@ function ashp_initialize_contact_message_status_admin() {
 	add_filter( 'post_row_actions', 'ashp_contact_message_row_actions', 10, 2 );
 	add_filter( 'manage_contact_message_posts_columns', 'ashp_contact_message_list_columns' );
 	add_action( 'manage_contact_message_posts_custom_column', 'ashp_contact_message_list_column_content', 10, 2 );
-	add_action( 'add_meta_boxes_contact_message', 'ashp_contact_message_readonly_detail_screen', 10, 2 );
+	add_action( 'add_meta_boxes_contact_message', 'ashp_contact_message_readonly_detail_screen', 10, 1 );
 }
 
 add_action( 'init', 'ashp_register_contact_message_post_type' );
