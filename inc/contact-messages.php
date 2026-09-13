@@ -364,6 +364,8 @@ function ashp_contact_message_readonly_detail_screen( $screen, $context, $post )
 	remove_meta_box( 'submitdiv', 'contact_message', 'side' );
 	remove_meta_box( 'authordiv', 'contact_message', 'side' );
 	remove_meta_box( 'slugdiv', 'contact_message', 'side' );
+	remove_meta_box( 'postdiv', 'contact_message', 'normal' );
+	remove_meta_box( 'postdivrich', 'contact_message', 'normal' );
 
 	add_meta_box(
 		'ashp_contact_message_detail',
