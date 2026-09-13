@@ -42,7 +42,7 @@ function ashp_register_contact_message_post_type() {
 		'show_in_nav_menus'  => false,
 		'has_archive'        => false,
 		'rewrite'            => false,
-		'supports'           => array(),
+		'supports'           => array( 'title', 'editor' ),
 		'menu_icon'          => 'dashicons-email-alt',
 		'menu_position'      => 25,
 		'capability_type'    => 'post',
@@ -333,7 +333,7 @@ function ashp_prevent_contact_message_creation() {
 function ashp_hide_contact_message_add_new_button() {
 	$screen = get_current_screen();
 
-	if ( ! $screen || 'edit-contact_message' !== $screen->id ) {
+	if ( ! $screen || ( 'edit-contact_message' !== $screen->id && 'contact_message' !== $screen->id ) ) {
 		return;
 	}
 
@@ -341,7 +341,15 @@ function ashp_hide_contact_message_add_new_button() {
 	?>
 	<style>
 		#favorite-actions,
-		.page-title-action {
+		.page-title-action,
+		#submitdiv,
+		#submitpost,
+		.submitdelete,
+		.misc-pub-visibility,
+		.misc-pub-curtime,
+		#minor-publishing-actions,
+		#major-publishing-actions,
+		.button-link.delete {
 			display: none !important;
 		}
 	</style>
@@ -356,16 +364,16 @@ function ashp_hide_contact_message_add_new_button() {
  * @param WP_Post  $post     Post object.
  * @return void
  */
-function ashp_contact_message_readonly_detail_screen( $screen, $context, $post ) {
-	if ( 'contact_message' !== $post->post_type ) {
+function ashp_contact_message_readonly_detail_screen( $post_type, $post ) {
+	if ( 'contact_message' !== $post_type || ! $post || 'contact_message' !== $post->post_type ) {
 		return;
 	}
 
+	remove_post_type_support( 'contact_message', 'editor' );
+	remove_post_type_support( 'contact_message', 'title' );
 	remove_meta_box( 'submitdiv', 'contact_message', 'side' );
 	remove_meta_box( 'authordiv', 'contact_message', 'side' );
 	remove_meta_box( 'slugdiv', 'contact_message', 'side' );
-	remove_meta_box( 'postdiv', 'contact_message', 'normal' );
-	remove_meta_box( 'postdivrich', 'contact_message', 'normal' );
 
 	add_meta_box(
 		'ashp_contact_message_detail',
@@ -426,10 +434,11 @@ function ashp_initialize_contact_message_status_admin() {
 	add_action( 'admin_menu', 'ashp_remove_contact_message_admin_menus' );
 	add_action( 'load-post-new.php', 'ashp_prevent_contact_message_creation' );
 	add_action( 'admin_head-edit.php', 'ashp_hide_contact_message_add_new_button' );
+	add_action( 'admin_head-post.php', 'ashp_hide_contact_message_add_new_button' );
 	add_filter( 'post_row_actions', 'ashp_contact_message_row_actions', 10, 2 );
 	add_filter( 'manage_contact_message_posts_columns', 'ashp_contact_message_list_columns' );
 	add_action( 'manage_contact_message_posts_custom_column', 'ashp_contact_message_list_column_content', 10, 2 );
-	add_action( 'do_meta_boxes', 'ashp_contact_message_readonly_detail_screen', 10, 3 );
+	add_action( 'add_meta_boxes_contact_message', 'ashp_contact_message_readonly_detail_screen', 10, 2 );
 }
 
 add_action( 'init', 'ashp_register_contact_message_post_type' );
