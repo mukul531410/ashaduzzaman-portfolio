@@ -175,11 +175,11 @@ function ashp_contact_message_status_filter_query( $query ) {
 }
 
 /**
- * Add Reply by Email link to Contact Message edit screen.
+ * Replace Edit action with View for Contact Messages and keep Reply by Email.
  *
- * @param array $actions Existing action links.
- * @param WP_Post $post Post object.
- * @return array
+ * @param array   $actions Existing row actions.
+ * @param WP_Post $post    Post object.
+ * @return array Modified actions.
  */
 function ashp_contact_message_row_actions( $actions, $post ) {
 	if ( 'contact_message' !== $post->post_type ) {
@@ -187,6 +187,14 @@ function ashp_contact_message_row_actions( $actions, $post ) {
 	}
 
 	$email = get_post_meta( $post->ID, '_ashp_contact_email', true );
+
+	if ( isset( $actions['edit'] ) ) {
+		$actions['view'] = str_replace( '&amp;action=edit', '', $actions['edit'] );
+		$actions['view'] = preg_replace( '/<a[^>]*>/', '<a href="' . get_edit_post_link( $post->ID ) . '">', $actions['view'] );
+		$actions['view'] = str_replace( 'Edit', 'View', $actions['view'] );
+		unset( $actions['edit'] );
+	}
+
 	if ( ! $email ) {
 		return $actions;
 	}
@@ -277,6 +285,98 @@ function ashp_save_contact_message_status( $post_id ) {
 }
 
 /**
+ * Remove manual Contact Message creation from the admin UI.
+ *
+ * Programmatic creation via wp_insert_post() still works.
+ *
+ * @return void
+ */
+function ashp_remove_contact_message_admin_menus() {
+	global $submenu, $menu;
+
+	if ( isset( $submenu['edit.php?post_type=contact_message'] ) ) {
+		foreach ( $submenu['edit.php?post_type=contact_message'] as $index => $item ) {
+			if ( 'post-new.php?post_type=contact_message' === $item[2] ) {
+				unset( $submenu['edit.php?post_type=contact_message'][ $index ] );
+			}
+		}
+	}
+
+	if ( isset( $menu ) ) {
+		foreach ( $menu as $index => $item ) {
+			if ( isset( $item[2] ) && 'post-new.php?post_type=contact_message' === $item[2] ) {
+				unset( $menu[ $index ] );
+			}
+		}
+	}
+}
+
+/**
+ * Render a read-only lead detail screen for Contact Messages.
+ *
+ * @param string   $screen   Current admin screen ID.
+ * @param string   $context  Meta box context.
+ * @param WP_Post  $post     Post object.
+ * @return void
+ */
+function ashp_contact_message_readonly_detail_screen( $screen, $context, $post ) {
+	if ( 'contact_message' !== $post->post_type ) {
+		return;
+	}
+
+	remove_post_type_support( 'contact_message', 'editor' );
+	remove_meta_box( 'authordiv', 'contact_message', 'normal' );
+	remove_meta_box( 'submitdiv', 'contact_message', 'normal' );
+	remove_meta_box( 'slugdiv', 'contact_message', 'normal' );
+
+	add_meta_box(
+		'ashp_contact_message_detail',
+		'Lead Details',
+		'ashp_contact_message_detail_meta_box',
+		'contact_message',
+		'normal',
+		'default'
+	);
+}
+
+/**
+ * Render read-only lead detail meta box content.
+ *
+ * @param WP_Post $post Post object.
+ * @return void
+ */
+function ashp_contact_message_detail_meta_box( $post ) {
+	$email = get_post_meta( $post->ID, '_ashp_contact_email', true );
+	$status = get_post_meta( $post->ID, '_ashp_contact_status', true );
+	$submitted = mysql2date( 'F j, Y g:i:s a', $post->post_date );
+	$message = get_post_field( 'post_content', $post->ID );
+	?>
+	<table class="form-table" style="width:100%;">
+		<tr>
+			<th style="width:25%;"><?php esc_html_e( 'Name', 'ashaduzzaman-portfolio' ); ?></th>
+			<td><?php echo esc_html( $post->post_title ); ?></td>
+		</tr>
+		<tr>
+			<th><?php esc_html_e( 'Email', 'ashaduzzaman-portfolio' ); ?></th>
+			<td><a href="mailto:<?php echo esc_attr( $email ); ?>"><?php echo esc_html( $email ); ?></a></td>
+		</tr>
+		<tr>
+			<th><?php esc_html_e( 'Message', 'ashaduzzaman-portfolio' ); ?></th>
+			<td><div style="background:#fff;padding:12px;border:1px solid #ccd0d4;white-space:pre-wrap;"><?php echo esc_html( $message ); ?></div></td>
+		</tr>
+		<tr>
+			<th><?php esc_html_e( 'Submitted', 'ashaduzzaman-portfolio' ); ?></th>
+			<td><?php echo esc_html( $submitted ); ?></td>
+		</tr>
+		<tr>
+			<th><?php esc_html_e( 'Status', 'ashaduzzaman-portfolio' ); ?></th>
+			<td><?php echo esc_html( $status ?: 'new' ); ?></td>
+		</tr>
+	</table>
+	<?php
+}
+
+/**
  * Initialize Contact Message status editing admin hooks.
  *
  * @return void
@@ -285,6 +385,11 @@ function ashp_initialize_contact_message_status_admin() {
 	add_action( 'quick_edit_custom_box', 'ashp_contact_message_quick_edit', 10, 2 );
 	add_action( 'admin_footer', 'ashp_contact_message_quick_edit_js' );
 	add_action( 'save_post_contact_message', 'ashp_save_contact_message_status' );
+	add_action( 'admin_menu', 'ashp_remove_contact_message_admin_menus' );
+	add_filter( 'post_row_actions', 'ashp_contact_message_row_actions', 10, 2 );
+	add_filter( 'manage_contact_message_posts_columns', 'ashp_contact_message_list_columns' );
+	add_action( 'manage_contact_message_posts_custom_column', 'ashp_contact_message_list_column_content', 10, 2 );
+	add_action( 'do_meta_boxes', 'ashp_contact_message_readonly_detail_screen', 10, 3 );
 }
 
 add_action( 'init', 'ashp_register_contact_message_post_type' );
