@@ -333,23 +333,14 @@ function ashp_prevent_contact_message_creation() {
 function ashp_hide_contact_message_add_new_button() {
 	$screen = get_current_screen();
 
-	if ( ! $screen || ( 'edit-contact_message' !== $screen->id && 'contact_message' !== $screen->id ) ) {
+	if ( ! $screen || 'edit-contact_message' !== $screen->id ) {
 		return;
 	}
 
 	remove_action( 'admin_notices', array( $GLOBALS['pagenow'], 'display_media_library_notice' ) );
 	?>
 	<style>
-		#favorite-actions,
-		.page-title-action,
-		#submitdiv,
-		#submitpost,
-		.submitdelete,
-		.misc-pub-visibility,
-		.misc-pub-curtime,
-		#minor-publishing-actions,
-		#major-publishing-actions,
-		.button-link.delete {
+		.page-title-action {
 			display: none !important;
 		}
 	</style>
@@ -357,11 +348,9 @@ function ashp_hide_contact_message_add_new_button() {
 }
 
 /**
- * Render a read-only lead detail screen for Contact Messages.
+ * Add an informational Contact Message meta box alongside the native editor.
  *
- * @param string   $screen   Current admin screen ID.
- * @param string   $context  Meta box context.
- * @param WP_Post  $post     Post object.
+ * @param WP_Post $post Post object.
  * @return void
  */
 function ashp_contact_message_readonly_detail_screen( $post ) {
@@ -369,18 +358,12 @@ function ashp_contact_message_readonly_detail_screen( $post ) {
 		return;
 	}
 
-	remove_post_type_support( 'contact_message', 'editor' );
-	remove_post_type_support( 'contact_message', 'title' );
-	remove_meta_box( 'submitdiv', 'contact_message', 'side' );
-	remove_meta_box( 'authordiv', 'contact_message', 'side' );
-	remove_meta_box( 'slugdiv', 'contact_message', 'side' );
-
 	add_meta_box(
 		'ashp_contact_message_detail',
 		'Lead Details',
 		'ashp_contact_message_detail_meta_box',
 		'contact_message',
-		'normal',
+		'side',
 		'default'
 	);
 }
@@ -434,7 +417,6 @@ function ashp_initialize_contact_message_status_admin() {
 	add_action( 'admin_menu', 'ashp_remove_contact_message_admin_menus' );
 	add_action( 'load-post-new.php', 'ashp_prevent_contact_message_creation' );
 	add_action( 'admin_head-edit.php', 'ashp_hide_contact_message_add_new_button' );
-	add_action( 'admin_head-post.php', 'ashp_hide_contact_message_add_new_button' );
 	add_filter( 'post_row_actions', 'ashp_contact_message_row_actions', 10, 2 );
 	add_filter( 'manage_contact_message_posts_columns', 'ashp_contact_message_list_columns' );
 	add_action( 'manage_contact_message_posts_custom_column', 'ashp_contact_message_list_column_content', 10, 2 );
