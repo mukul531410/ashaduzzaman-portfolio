@@ -164,35 +164,28 @@ function ashp_prevent_testimonial_creation() {
 }
 
 /**
- * Replace the normal testimonial edit screen with a read-only detail view.
+ * Add an informational testimonial meta box alongside the native editor.
  *
- * @param string   $screen   Current admin screen ID.
- * @param string   $context  Meta box context.
- * @param WP_Post  $post     Post object.
+ * @param WP_Post $post Post object.
  * @return void
  */
-function ashp_testimonial_readonly_detail_screen( $screen, $context, $post ) {
-	if ( 'testimonial' !== $post->post_type ) {
+function ashp_testimonial_readonly_detail_screen( $post ) {
+	if ( ! $post || 'testimonial' !== $post->post_type ) {
 		return;
 	}
-
-	remove_post_type_support( 'testimonial', 'editor' );
-	remove_meta_box( 'authordiv', 'testimonial', 'normal' );
-	remove_meta_box( 'submitdiv', 'testimonial', 'normal' );
-	remove_meta_box( 'slugdiv', 'testimonial', 'normal' );
 
 	add_meta_box(
 		'ashp_testimonial_detail',
 		'Testimonial Details',
 		'ashp_testimonial_detail_meta_box',
 		'testimonial',
-		'normal',
+		'side',
 		'default'
 	);
 }
 
 /**
- * Render read-only testimonial detail meta box.
+ * Render testimonial detail meta box content.
  *
  * @param WP_Post $post Post object.
  * @return void
@@ -204,11 +197,7 @@ function ashp_testimonial_detail_meta_box( $post ) {
 	?>
 	<table class="form-table" style="width:100%;">
 		<tr>
-			<th style="width:25%;"><?php esc_html_e( 'Name', 'ashaduzzaman-portfolio' ); ?></th>
-			<td><?php echo esc_html( $post->post_title ); ?></td>
-		</tr>
-		<tr>
-			<th><?php esc_html_e( 'Company', 'ashaduzzaman-portfolio' ); ?></th>
+			<th style="width:25%;"><?php esc_html_e( 'Company', 'ashaduzzaman-portfolio' ); ?></th>
 			<td><?php echo esc_html( $company ?: '' ); ?></td>
 		</tr>
 		<tr>
@@ -219,10 +208,6 @@ function ashp_testimonial_detail_meta_box( $post ) {
 			<th><?php esc_html_e( 'Rating', 'ashaduzzaman-portfolio' ); ?></th>
 			<td><?php echo esc_html( $rating ?: '' ); ?></td>
 		</tr>
-		<tr>
-			<th><?php esc_html_e( 'Content', 'ashaduzzaman-portfolio' ); ?></th>
-			<td><div style="background:#fff;padding:12px;border:1px solid #ccd0d4;white-space:pre-wrap;"><?php echo esc_html( $post->post_content ); ?></div></td>
-		</tr>
 	</table>
 	<?php
 }
@@ -232,4 +217,4 @@ add_action( 'init', 'ashp_register_skills_post_type' );
 add_action( 'init', 'ashp_register_testimonials_post_type' );
 add_action( 'admin_menu', 'ashp_remove_testimonial_admin_menus' );
 add_action( 'load-post-new.php', 'ashp_prevent_testimonial_creation' );
-add_action( 'do_meta_boxes', 'ashp_testimonial_readonly_detail_screen', 10, 3 );
+add_action( 'add_meta_boxes_testimonial', 'ashp_testimonial_readonly_detail_screen', 10, 1 );
