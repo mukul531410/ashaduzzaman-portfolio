@@ -312,6 +312,43 @@ function ashp_remove_contact_message_admin_menus() {
 }
 
 /**
+ * Redirect direct access to Contact Message creation screen.
+ *
+ * Programmatic creation via wp_insert_post() still works.
+ *
+ * @return void
+ */
+function ashp_prevent_contact_message_creation() {
+	if ( isset( $_GET['post_type'] ) && 'contact_message' === $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		wp_redirect( admin_url( 'edit.php?post_type=contact_message' ) );
+		exit;
+	}
+}
+
+/**
+ * Hide the Add New button on the Contact Messages list screen.
+ *
+ * @return void
+ */
+function ashp_hide_contact_message_add_new_button() {
+	$screen = get_current_screen();
+
+	if ( ! $screen || 'edit-contact_message' !== $screen->id ) {
+		return;
+	}
+
+	remove_action( 'admin_notices', array( $GLOBALS['pagenow'], 'display_media_library_notice' ) );
+	?>
+	<style>
+		#favorite-actions,
+		.page-title-action {
+			display: none !important;
+		}
+	</style>
+	<?php
+}
+
+/**
  * Render a read-only lead detail screen for Contact Messages.
  *
  * @param string   $screen   Current admin screen ID.
@@ -386,6 +423,8 @@ function ashp_initialize_contact_message_status_admin() {
 	add_action( 'admin_footer', 'ashp_contact_message_quick_edit_js' );
 	add_action( 'save_post_contact_message', 'ashp_save_contact_message_status' );
 	add_action( 'admin_menu', 'ashp_remove_contact_message_admin_menus' );
+	add_action( 'load-post-new.php', 'ashp_prevent_contact_message_creation' );
+	add_action( 'admin_head-edit.php', 'ashp_hide_contact_message_add_new_button' );
 	add_filter( 'post_row_actions', 'ashp_contact_message_row_actions', 10, 2 );
 	add_filter( 'manage_contact_message_posts_columns', 'ashp_contact_message_list_columns' );
 	add_action( 'manage_contact_message_posts_custom_column', 'ashp_contact_message_list_column_content', 10, 2 );
