@@ -42,7 +42,7 @@ function ashp_register_contact_message_post_type() {
 		'show_in_nav_menus'  => false,
 		'has_archive'        => false,
 		'rewrite'            => false,
-		'supports'           => array( 'title', 'editor' ),
+		'supports'           => array(),
 		'menu_icon'          => 'dashicons-email-alt',
 		'menu_position'      => 25,
 		'capability_type'    => 'post',
@@ -361,10 +361,9 @@ function ashp_contact_message_readonly_detail_screen( $screen, $context, $post )
 		return;
 	}
 
-	remove_post_type_support( 'contact_message', 'editor' );
-	remove_meta_box( 'authordiv', 'contact_message', 'normal' );
-	remove_meta_box( 'submitdiv', 'contact_message', 'normal' );
-	remove_meta_box( 'slugdiv', 'contact_message', 'normal' );
+	remove_meta_box( 'submitdiv', 'contact_message', 'side' );
+	remove_meta_box( 'authordiv', 'contact_message', 'side' );
+	remove_meta_box( 'slugdiv', 'contact_message', 'side' );
 
 	add_meta_box(
 		'ashp_contact_message_detail',
