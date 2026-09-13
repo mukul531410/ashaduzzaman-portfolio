@@ -286,3 +286,5 @@ function ashp_initialize_contact_message_status_admin() {
 	add_action( 'admin_footer', 'ashp_contact_message_quick_edit_js' );
 	add_action( 'save_post_contact_message', 'ashp_save_contact_message_status' );
 }
+
+add_action( 'init', 'ashp_register_contact_message_post_type' );
