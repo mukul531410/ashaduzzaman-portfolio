@@ -121,6 +121,8 @@ function ashp_get_global_settings() {
  */
 function ashp_get_home_page_settings() {
 	$fields = array(
+		'skills_section_title',
+		'skills_section_description',
 		'projects_section_title',
 		'projects_content',
 		'projects_archive_button_text',
