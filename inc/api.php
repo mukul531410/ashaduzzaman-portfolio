@@ -133,6 +133,7 @@ function ashp_get_home_page_settings() {
 		'section_title',
 		'highlight_title',
 		'about_me',
+		'service_items',
 		'skills_section_title',
 		'skills_section_description',
 		'projects_section_title',
@@ -151,6 +152,31 @@ function ashp_get_home_page_settings() {
 	$data   = array();
 
 	foreach ( $fields as $field ) {
+		if ( 'service_items' === $field ) {
+			$items = array();
+
+			for ( $i = 1; $i <= 4; $i++ ) {
+				$item = get_field( 'service_item_' . $i, 12 );
+
+				if ( is_array( $item ) ) {
+					$icon_url = '';
+
+					if ( is_array( $item['icon'] ) && ! empty( $item['icon']['url'] ) ) {
+						$icon_url = $item['icon']['url'];
+					}
+
+					$items[] = array(
+						'number' => (string) ( $item['number_of_serve'] ?? '' ),
+						'title'  => (string) ( $item['title_of_service'] ?? '' ),
+						'icon'   => $icon_url,
+					);
+				}
+			}
+
+			$data[ $field ] = $items;
+			continue;
+		}
+
 		$value = function_exists( 'get_field' ) ? get_field( $field, 12 ) : '';
 
 		if ( in_array( $field, array( 'resume_upload', 'picture' ), true ) && is_array( $value ) ) {
