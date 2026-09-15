@@ -121,6 +121,18 @@ function ashp_get_global_settings() {
  */
 function ashp_get_home_page_settings() {
 	$fields = array(
+		'availability',
+		'hero_title',
+		'sub_title',
+		'hero_content',
+		'upwork_link',
+		'freelancer_link',
+		'booking_link',
+		'resume_upload',
+		'picture',
+		'section_title',
+		'highlight_title',
+		'about_me',
 		'skills_section_title',
 		'skills_section_description',
 		'projects_section_title',
@@ -139,8 +151,15 @@ function ashp_get_home_page_settings() {
 	$data   = array();
 
 	foreach ( $fields as $field ) {
-		$value          = function_exists( 'get_field' ) ? get_field( $field, 12 ) : '';
-		$data[ $field ] = is_string( $value ) ? $value : '';
+		$value = function_exists( 'get_field' ) ? get_field( $field, 12 ) : '';
+
+		if ( in_array( $field, array( 'resume_upload', 'picture' ), true ) && is_array( $value ) ) {
+			$data[ $field ] = ! empty( $value['url'] ) ? $value['url'] : '';
+		} elseif ( is_string( $value ) ) {
+			$data[ $field ] = $value;
+		} else {
+			$data[ $field ] = '';
+		}
 	}
 
 	return rest_ensure_response( $data );
