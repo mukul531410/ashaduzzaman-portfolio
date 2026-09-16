@@ -134,8 +134,8 @@ function ashp_get_home_page_settings() {
 		'highlight_title',
 		'about_me',
 		'service_items',
-		'skills_section_title',
-		'skills_section_description',
+		'technical_skills_section_title',
+		'technical_skills_content',
 		'projects_section_title',
 		'projects_content',
 		'projects_archive_button_text',
@@ -150,8 +150,14 @@ function ashp_get_home_page_settings() {
 		'contact_info_description',
 	);
 	$data   = array();
+	$field_output_map = array(
+		'technical_skills_section_title' => 'skills_section_title',
+		'technical_skills_content'       => 'skills_section_description',
+	);
 
 	foreach ( $fields as $field ) {
+		$output_key = $field_output_map[ $field ] ?? $field;
+
 		if ( 'service_items' === $field ) {
 			$items = array();
 
@@ -173,18 +179,18 @@ function ashp_get_home_page_settings() {
 				}
 			}
 
-			$data[ $field ] = $items;
+			$data[ $output_key ] = $items;
 			continue;
 		}
 
 		$value = function_exists( 'get_field' ) ? get_field( $field, 12 ) : '';
 
 		if ( in_array( $field, array( 'resume_upload', 'picture' ), true ) && is_array( $value ) ) {
-			$data[ $field ] = ! empty( $value['url'] ) ? $value['url'] : '';
+			$data[ $output_key ] = ! empty( $value['url'] ) ? $value['url'] : '';
 		} elseif ( is_string( $value ) ) {
-			$data[ $field ] = $value;
+			$data[ $output_key ] = $value;
 		} else {
-			$data[ $field ] = '';
+			$data[ $output_key ] = '';
 		}
 	}
 
