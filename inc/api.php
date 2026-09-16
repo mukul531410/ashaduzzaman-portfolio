@@ -91,6 +91,8 @@ function ashp_get_global_settings() {
 	$email   = sanitize_email( (string) get_theme_mod( 'ashp_email', '' ) );
 	$phone   = sanitize_text_field( (string) get_theme_mod( 'ashp_phone', '' ) );
 	$address = wp_kses_post( (string) get_theme_mod( 'ashp_address', '' ) );
+	$logo    = esc_url_raw( (string) get_theme_mod( 'ashp_logo', '' ) );
+	$site_icon = esc_url_raw( (string) get_site_icon_url() );
 
 	$social_keys = array( 'facebook', 'twitter', 'instagram', 'linkedin', 'github' );
 	$social      = array();
@@ -105,10 +107,12 @@ function ashp_get_global_settings() {
 	}
 
 	$data = array(
-		'email'   => $email,
-		'phone'   => $phone,
-		'address' => $address,
-		'social'  => $social,
+		'email'      => $email,
+		'phone'      => $phone,
+		'address'    => $address,
+		'logo'       => $logo,
+		'site_icon'  => $site_icon,
+		'social'     => $social,
 	);
 
 	return rest_ensure_response( $data );
