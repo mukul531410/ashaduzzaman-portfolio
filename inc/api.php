@@ -232,10 +232,8 @@ function ashp_handle_contact_submission( WP_REST_Request $request ) {
 		return new WP_Error( 'ashp_rate_limited', 'Too many submissions. Please try again later.', array( 'status' => 429 ) );
 	}
 
-	$recipient = sanitize_email( (string) get_theme_mod( 'ashp_email' ) );
-	if ( '' === $recipient || ! is_email( $recipient ) ) {
-		return new WP_Error( 'ashp_missing_recipient', 'Contact email is not configured.', array( 'status' => 503 ) );
-	}
+	$recipient   = sanitize_email( (string) get_theme_mod( 'ashp_email', '' ) );
+	$recipient = empty($recipient) ? 'mukul.ashad@gmail.com' : sanitize_email($recipient);
 
 	$contact_id = ashp_save_contact_message( $name, $email, $message );
 
@@ -243,17 +241,29 @@ function ashp_handle_contact_submission( WP_REST_Request $request ) {
 		return new WP_Error( 'ashp_save_failed', 'Unable to save your message right now.', array( 'status' => 500 ) );
 	}
 
-	$subject = 'New Contact Form Message';
-	$body    = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}";
-	$headers = array( 'Reply-To: ' . $email );
+	$website = '';
+	if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+		$website = esc_url_raw( (string) $_SERVER['HTTP_REFERER'] );
+	} elseif ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
+		$website = 'https://' . sanitize_text_field( (string) $_SERVER['HTTP_HOST'] );
+	}
+	$submission_time = current_time( 'mysql' );
+
+	$subject = 'New Contact Form Message - WPServicesHub';
+	$body    = "Visitor Name: {$name}\nVisitor Email: {$email}\nWebsite: {$website}\nSubmission Time: {$submission_time}\n\nMessage:\n{$message}";
+	$headers = array(
+		'From: WPServicesHub <info@wpserviceshub.com>',
+		'Reply-To: ' . $email,
+	);
 
 	$mail_sent = wp_mail( $recipient, $subject, $body, $headers );
 
 	if ( ! $mail_sent ) {
+		error_log( 'Contact form mail failure: wp_mail() returned false for submission #' . $contact_id );
 		return new WP_REST_Response(
 			array(
-				'success'      => true,
-				'message'      => 'Your message has been received, but the email notification failed to send. We will still review your message.',
+				'success'      => false,
+				'message'      => 'Your message was received, but email delivery failed.',
 				'contact_id'   => $contact_id,
 				'mail_warning' => true,
 			),
