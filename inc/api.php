@@ -253,10 +253,22 @@ function ashp_handle_contact_submission( WP_REST_Request $request ) {
 	$body    = "Visitor Name: {$name}\nVisitor Email: {$email}\nWebsite: {$website}\nSubmission Time: {$submission_time}\n\nMessage:\n{$message}";
 	$headers = array(
 		'From: WPServicesHub <info@wpserviceshub.com>',
-		'Reply-To: ' . $email,
+		'Reply-To: ' . $name . ' <' . $email . '>',
+		'Content-Type: text/plain; charset=UTF-8',
+		'MIME-Version: 1.0',
 	);
 
 	$mail_sent = wp_mail( $recipient, $subject, $body, $headers );
+
+	$client_subject = 'We Received Your Message — WPServicesHub';
+	$client_body    = '<!DOCTYPE html><html><body><p>Hi ' . esc_html( $name ) . ',</p><p>Thank you for contacting WPServicesHub.</p><p>We have received your message successfully.</p><p>Our team will review your message and get back to you within 24 hours.</p><p>Best regards,<br>WPServicesHub<br><a href="https://wpserviceshub.com/">https://wpserviceshub.com/</a></p></body></html>';
+	$client_headers = array(
+		'From: WPServicesHub <info@wpserviceshub.com>',
+		'Reply-To: ' . $recipient,
+		'Content-Type: text/html; charset=UTF-8',
+		'MIME-Version: 1.0',
+	);
+	wp_mail( $email, $client_subject, $client_body, $client_headers );
 
 	if ( ! $mail_sent ) {
 		error_log( 'Contact form mail failure: wp_mail() returned false for submission #' . $contact_id );
